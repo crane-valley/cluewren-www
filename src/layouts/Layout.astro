@@ -1,0 +1,54 @@
+---
+import "../styles/global.css";
+import { languages, strings, repo, docsUrl } from "../i18n";
+import type { Locale } from "../i18n/types";
+
+interface Props {
+  locale: Locale;
+  title?: string;
+}
+
+const { locale, title } = Astro.props;
+const t = strings[locale];
+const pageTitle = title ? `${title} | ${t.meta.title}` : t.meta.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={languages[locale].lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={canonical} />
+    {Object.entries(languages).map(([code, l]) => (
+      <link rel="alternate" hreflang={l.lang} href={new URL(l.home, Astro.site)} />
+    ))}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <header class="bar">
+      <a class="mark" href={languages[locale].home}>Cluewren</a>
+      <nav aria-label="primary">
+        <a href={docsUrl(locale)}>{t.nav.docs}</a>
+        <a href={repo}>{t.nav.github}</a>
+        <span class="langs" aria-label={t.nav.language}>
+          {Object.entries(languages).map(([code, l]) =>
+            code === locale ? <span aria-current="true">{l.label}</span> : <a href={l.home} hreflang={l.lang}>{l.label}</a>,
+          )}
+        </span>
+      </nav>
+    </header>
+    <slot />
+    <footer class="foot">
+      <p>{t.footer.license}</p>
+      <p>{t.footer.derived}</p>
+      <p>© Crane Valley</p>
+    </footer>
+  </body>
+</html>

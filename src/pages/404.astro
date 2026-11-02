@@ -1,0 +1,14 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { strings } from "../i18n";
+
+const t = strings.en;
+---
+
+<Layout locale="en" title={t.notFound.title}>
+  <main class="hero">
+    <h1>{t.notFound.title}</h1>
+    <p class="lead">{t.notFound.body}</p>
+    <p class="actions"><a class="button primary" href="/">{t.notFound.home}</a></p>
+  </main>
+</Layout>
