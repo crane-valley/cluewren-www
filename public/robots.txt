@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cluewren.dev/sitemap-index.xml
