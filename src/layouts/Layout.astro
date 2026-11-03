@@ -1,17 +1,21 @@
 ---
+import "@fontsource-variable/recursive/mono.css";
 import "../styles/global.css";
+import Mark from "../components/Mark.astro";
 import { languages, strings, repo, docsUrl } from "../i18n";
 import type { Locale } from "../i18n/types";
 
 interface Props {
   locale: Locale;
   title?: string;
+  alternates?: boolean;
 }
 
-const { locale, title } = Astro.props;
+const { locale, title, alternates = true } = Astro.props;
 const t = strings[locale];
-const pageTitle = title ? `${title} | ${t.meta.title}` : t.meta.title;
+const pageTitle = title ? `${title} | Cluewren` : t.meta.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("/og.png", Astro.site);
 ---
 
 <!doctype html>
@@ -21,33 +25,48 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={t.meta.description} />
-    <link rel="canonical" href={canonical} />
-    {Object.entries(languages).map(([code, l]) => (
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {alternates && <link rel="canonical" href={canonical} />}
+    {alternates && Object.values(languages).map((l) => (
       <link rel="alternate" hreflang={l.lang} href={new URL(l.home, Astro.site)} />
     ))}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {alternates && <link rel="alternate" hreflang="x-default" href={new URL(languages.en.home, Astro.site)} />}
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={t.meta.description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t.meta.title} />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
+    <a class="skip" href="#main">{t.nav.skip}</a>
     <header class="bar">
-      <a class="mark" href={languages[locale].home}>Cluewren</a>
-      <nav aria-label="primary">
+      <a class="brand" href={languages[locale].home}><Mark />Cluewren</a>
+      <nav aria-label={t.nav.label}>
         <a href={docsUrl(locale)}>{t.nav.docs}</a>
         <a href={repo}>{t.nav.github}</a>
-        <span class="langs" aria-label={t.nav.language}>
-          {Object.entries(languages).map(([code, l]) =>
-            code === locale ? <span aria-current="true">{l.label}</span> : <a href={l.home} hreflang={l.lang}>{l.label}</a>,
-          )}
-        </span>
+        <ul class="langs" aria-label={t.nav.language}>
+          {Object.entries(languages).map(([code, l]) => (
+            <li>
+              {code === locale
+                ? <a href={l.home} lang={l.lang} aria-current="page">{l.label}</a>
+                : <a href={l.home} lang={l.lang} hreflang={l.lang}>{l.label}</a>}
+            </li>
+          ))}
+        </ul>
       </nav>
     </header>
     <slot />
     <footer class="foot">
-      <p>{t.footer.license}</p>
-      <p>{t.footer.derived}</p>
+      <p class="brand"><Mark />Cluewren</p>
+      <ul>
+        <li><a href={docsUrl(locale)}>{t.nav.docs}</a></li>
+        <li><a href={repo}>{t.nav.github}</a></li>
+      </ul>
+      <p>{t.footer.license} {t.footer.derived}</p>
       <p>© Crane Valley</p>
     </footer>
   </body>

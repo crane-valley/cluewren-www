@@ -1,14 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { strings } from "../i18n";
+import { strings, languages } from "../i18n";
+import type { Locale } from "../i18n/types";
 
-const t = strings.en;
+const locales = Object.keys(languages) as Locale[];
 ---
 
-<Layout locale="en" title={t.notFound.title}>
-  <main class="hero">
-    <h1>{t.notFound.title}</h1>
-    <p class="lead">{t.notFound.body}</p>
-    <p class="actions"><a class="button primary" href="/">{t.notFound.home}</a></p>
+<Layout locale="en" title={strings.en.notFound.title} alternates={false}>
+  <main id="main" class="missing">
+    {locales.map((code, i) => (
+      <section lang={languages[code].lang}>
+        {i === 0 ? <h1>{strings[code].notFound.title}</h1> : <h2>{strings[code].notFound.title}</h2>}
+        <p>{strings[code].notFound.body}</p>
+        <p><a class="button" href={languages[code].home}>{strings[code].notFound.home}</a></p>
+      </section>
+    ))}
   </main>
 </Layout>

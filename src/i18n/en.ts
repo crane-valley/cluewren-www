@@ -2,58 +2,118 @@ import type { Strings } from "./types";
 
 const en: Strings = {
   meta: {
-    title: "Cluewren",
+    title: "Cluewren: Automated playtesting for coding agents",
     description:
-      "Cluewren plays the game open in your Unity, Godot, or Unreal editor for your coding agent. A fast decision model plays inside a C# harness the agent writes, and the agent reports findings with evidence.",
+      "Ask your coding agent questions about the game open in your Unity, Godot, or Unreal editor. The agent writes a C# harness, Jev plays it, and the agent reports a verdict with measured evidence.",
   },
-  nav: { docs: "Docs", github: "GitHub", language: "Language" },
+  nav: {
+    label: "Primary navigation",
+    skip: "Skip to content",
+    docs: "Docs",
+    github: "GitHub",
+    language: "Language",
+  },
   hero: {
-    lead: "Your coding agent can play the game open in your Unity, Godot, or Unreal editor to explore for bugs, verify claims, or reach goals in play.",
+    title: "Playtest your game with your coding agent",
+    lead:
+      "Ask Claude Code or Codex to verify claims, reach goals, or explore the game open in your editor. The agent writes a C# harness, Jev plays it through your engine, and the agent reports a verdict with measured evidence.",
     primary: "Get started",
     secondary: "GitHub",
+    requirements:
+      "You need Windows 11, the .NET 10 SDK, a TypeSafe API key, and a build from source.",
+  },
+  report: {
+    label: "Sample playtest report",
+    caption: "Excerpt from a real run on Unity's FPS Microgame sample.",
+    duration: "{s} s, 1 episode",
   },
   steps: {
     title: "How it works",
     items: [
       {
-        title: "Open your game in its editor",
+        title: "Open your game in the editor",
         body: "Open your project in Unity, Godot, or Unreal Engine with the Cluewren plugin installed.",
       },
       {
         title: "Ask your coding agent",
-        body: "Ask Claude Code or Codex to explore the game for bugs, test it, verify a claim about how it works or looks, or reach a goal in play.",
+        body: "Ask Claude Code or Codex to verify a claim, reach a goal, or explore.",
       },
       {
         title: "Play and report",
-        body: "Your agent researches the code, writes a C# harness that a fast decision model plays, inspects the frames, and reports what play showed with evidence.",
+        body: "The agent reads the code and writes a C# harness. Jev plays it, then the agent reviews frames when the verdict needs them and reports a verdict with measured evidence.",
       },
     ],
   },
-  features: {
-    title: "Features",
-    items: [
+  engines: {
+    title: "Tested engines",
+    head: {
+      engine: "Engine",
+      tested: "Tested version",
+      install: "How it installs",
+    },
+    rows: [
       {
-        title: "Engine plugins",
-        body: "Plugins connect Unity 6000.0+, Godot 4, and Unreal Engine 5 to the local Cluewren process over a loopback WebSocket with a secret handshake.",
+        engine: "Unity",
+        tested: "6000.6.7f1 (package declares 6000.0 or later)",
+        install: "UPM package from a git URL or from disk",
       },
       {
-        title: "Your own coding agent",
-        body: "Cluewren never starts or drives a language model. It runs as an MCP server for your Claude Code or Codex session, using your existing subscription or API key.",
+        engine: "Godot",
+        tested: "4.7.2",
+        install: "Copy addon into addons/ and enable it",
       },
       {
-        title: "What leaves your machine",
-        body: "Decision requests with game-state text go to TypeSafe's API, and your agent talks to its own provider. Nothing goes to Cluewren: no accounts, no telemetry. Recordings and run data stay in your project.",
-      },
-      {
-        title: "Sandboxed execution",
-        body: "The harness code written by your agent runs in a Windows AppContainer with no API keys, and under bubblewrap on Linux when available.",
+        engine: "Unreal Engine",
+        tested: "5.8 (Win64 only)",
+        install: "C++ projects build the plugin; Blueprint-only projects use a prebuilt BuildPlugin package",
       },
     ],
+  },
+  data: {
+    title: "Data boundaries",
+    stays: {
+      title: "What stays on your machine",
+      items: [
+        "No accounts, no telemetry, and nothing is sent to Cluewren.",
+        "Run memory stays in your project: harness.cs, trace logs, report.json, and notes.",
+        "Gameplay frames are held only in the brain process memory (the last 160 MiB), never written to disk, and discarded on exit.",
+      ],
+    },
+    leaves: {
+      title: "What leaves your machine",
+      items: [
+        "Jev decision requests (game-state text computed by the harness, plus options) go to api.typesafe.ai.",
+        "Whatever your coding agent reads or fetches (source code, or frames via the frames tool) goes to the agent's own provider. Cluewren cannot control what the agent sends.",
+      ],
+    },
+  },
+  sandbox: {
+    title: "Harness sandbox",
+    body:
+      "On Windows 11, the harness runs in an AppContainer with no network access, writes only to its run folder, and holds no API keys. If the container cannot be created, Cluewren falls back to a plain child process with no keys in its environment. That fallback process can read your files and reach the network, and the run log states when it is used.",
+    more: "Read more about the sandbox",
   },
   start: {
     title: "Quick start",
-    body: "Requires the .NET 10 SDK. Clone the repository, build the Release binary, and run connect to set up Claude Code (use connect codex for Codex):",
-    more: "Read the docs for engine plugin installation and API key setup",
+    body: "These commands build Cluewren and register it with your agent.",
+    connect: "Run connect claude or connect codex for the agent you use.",
+    next: {
+      title: "Next steps",
+      items: [
+        {
+          text: "Install the plugin for your engine",
+          page: "getting-started/install/",
+        },
+        {
+          text: "Put your TypeSafe API key in keys.env",
+          page: "guides/decision-model-key/",
+        },
+        {
+          text: "Start a new agent session and ask for a run",
+          page: "getting-started/first-run/",
+        },
+      ],
+    },
   },
   footer: {
     license: "Cluewren is open source under the Apache-2.0 license.",
