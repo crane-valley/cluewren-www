@@ -102,7 +102,7 @@ const en: Strings = {
       items: [
         {
           text: "Install the plugin for your engine",
-          page: "getting-started/install/",
+          page: "getting-started/install/#engine-plugins",
         },
         {
           text: "Put your TypeSafe API key in keys.env",

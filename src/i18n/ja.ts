@@ -4,7 +4,7 @@ const ja: Strings = {
   meta: {
     title: "Cluewren: コーディングエージェント向け自動プレイテスト",
     description:
-      "Unity、Godot、Unreal Engineのエディタで開いているゲームについて、コーディングエージェントにテストを依頼できます。エージェントがC#ハーネスを記述し、意思決定モデルJevがプレイして、測定された証拠とともに結果を報告します。",
+      "Unity、Godot、Unreal Engineのエディタで開いているゲームについて、コーディングエージェントにテストを依頼できます。エージェントがC#ハーネスを記述し、意思決定モデルJevがプレイして、エージェントが測定された証拠とともに結果を報告します。",
   },
   nav: {
     label: "メインナビゲーション",
@@ -16,7 +16,7 @@ const ja: Strings = {
   hero: {
     title: "コーディングエージェントでゲームをプレイテスト",
     lead:
-      "エディタで開いているゲームに対して、挙動の検証や目標達成、バグの探索をClaude CodeやCodexに依頼できます。エージェントがC#ハーネスを記述し、Jevがゲームをプレイして、測定された証拠とともに判定を報告します。",
+      "エディタで開いているゲームに対して、挙動の検証や目標達成、バグの探索をClaude CodeやCodexに依頼できます。エージェントがC#ハーネスを記述し、Jevがゲームをプレイして、エージェントが測定された証拠とともに判定を報告します。",
     primary: "はじめる",
     secondary: "GitHub",
     requirements:
@@ -103,7 +103,7 @@ const ja: Strings = {
       items: [
         {
           text: "お使いのエンジン向けプラグインを導入する",
-          page: "getting-started/install/",
+          page: "getting-started/install/#エンジンプラグイン",
         },
         {
           text: "keys.envにTypeSafeのAPIキーを設定する",
