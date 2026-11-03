@@ -8,29 +8,59 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = strings[locale];
-const quickStart = `git clone ${repo}.git
+const docs = docsUrl(locale);
+
+// Verbatim excerpts of report.json from a bench run on Unity's FPS Microgame (run 20261102-155326);
+// trimmed, never reworded, so the page shows what a run actually returns.
+const report = {
+  request: "Verify that the player can fly with the jetpack from the start of the level, without picking anything up.",
+  outcome: "DENIED",
+  seconds: 110.8,
+  summary: "From the start of MainScene with nothing picked up, the agent cannot fly with the jetpack: it is locked.",
+  evidence: [
+    "t=0.2-6.2 s: 5 completed attempts … Best rise 206.2 cm against 203 cm computed for a plain jump (JumpForce 9, GravityDownForce 20).",
+    "Control probe after a level restart, same input sequence: locked, rise 204.9 cm, fuel 1; after calling Jetpack.TryUnlock directly (research change, probe only), rise 1472 cm, fuel down to 0.",
+    "Code: Jetpack.cs:84 requires IsJetpackUnlocked to fire; TryUnlock's only caller is JetpackPickup.cs:11.",
+  ],
+};
+
+const build = `git clone ${repo}.git
 cd cluewren
-dotnet build -c Release
-./src/Cluewren/bin/Release/net10.0/cluewren connect claude`;
+dotnet build -c Release`;
+const connect = `./src/Cluewren/bin/Release/net10.0/cluewren connect claude
+./src/Cluewren/bin/Release/net10.0/cluewren connect codex`;
 ---
 
-<main>
+<main id="main">
   <section class="hero">
-    <h1>Cluewren</h1>
-    <p class="lead">{t.hero.lead}</p>
-    <p class="actions">
-      <a class="button primary" href={docsUrl(locale)}>{t.hero.primary}</a>
-      <a class="button" href={repo}>{t.hero.secondary}</a>
-    </p>
-    <ul class="engines">
-      <li>Unity</li>
-      <li>Godot</li>
-      <li>Unreal Engine</li>
-    </ul>
+    <div class="pitch">
+      <h1>{t.hero.title}</h1>
+      <p class="lead">{t.hero.lead}</p>
+      <p class="actions">
+        <a class="button primary" href={`${docs}getting-started/install/`}>{t.hero.primary}</a>
+        <a class="button" href={repo}>{t.hero.secondary}</a>
+      </p>
+      <p class="requirements">{t.hero.requirements}</p>
+    </div>
+
+    <figure class="report" aria-label={t.report.label}>
+      <div class="sheet" lang="en">
+        <p class="request">{report.request}</p>
+        <p class="verdict">
+          <span class="outcome">{report.outcome}</span>
+          <span class="duration" lang={locale}>{t.report.duration.replace("{s}", String(report.seconds))}</span>
+        </p>
+        <p class="summary">{report.summary}</p>
+        <ul class="evidence">
+          {report.evidence.map((line) => <li>{line}</li>)}
+        </ul>
+      </div>
+      <figcaption>{t.report.caption}</figcaption>
+    </figure>
   </section>
 
-  <section class="band">
-    <h2>{t.steps.title}</h2>
+  <section class="band" aria-labelledby="steps">
+    <h2 id="steps">{t.steps.title}</h2>
     <ol class="steps">
       {t.steps.items.map((step) => (
         <li>
@@ -41,22 +71,66 @@ dotnet build -c Release
     </ol>
   </section>
 
-  <section class="band">
-    <h2>{t.features.title}</h2>
-    <div class="grid">
-      {t.features.items.map((item) => (
-        <article>
-          <h3>{item.title}</h3>
-          <p>{item.body}</p>
-        </article>
-      ))}
+  <section class="band" aria-labelledby="engines">
+    <h2 id="engines">{t.engines.title}</h2>
+    <div class="table">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">{t.engines.head.engine}</th>
+            <th scope="col">{t.engines.head.tested}</th>
+            <th scope="col">{t.engines.head.install}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {t.engines.rows.map((row) => (
+            <tr>
+              <th scope="row">{row.engine}</th>
+              <td data-label={t.engines.head.tested}>{row.tested}</td>
+              <td data-label={t.engines.head.install}>{row.install}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   </section>
 
-  <section class="band">
-    <h2>{t.start.title}</h2>
-    <p>{t.start.body}</p>
-    <pre><code>{quickStart}</code></pre>
-    <p><a href={docsUrl(locale)}>{t.start.more}</a></p>
+  <section class="band" aria-labelledby="data">
+    <h2 id="data">{t.data.title}</h2>
+    <div class="split">
+      <div>
+        <h3>{t.data.stays.title}</h3>
+        <ul>{t.data.stays.items.map((item) => <li>{item}</li>)}</ul>
+      </div>
+      <div>
+        <h3>{t.data.leaves.title}</h3>
+        <ul>{t.data.leaves.items.map((item) => <li>{item}</li>)}</ul>
+      </div>
+      <div>
+        <h3>{t.sandbox.title}</h3>
+        <p>{t.sandbox.body}</p>
+        <p><a href={`${docs}concepts/sandbox/`}>{t.sandbox.more}</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="start">
+    <h2 id="start">{t.start.title}</h2>
+    <div class="start">
+      <div>
+        <p>{t.start.body}</p>
+        <pre><code>{build}</code></pre>
+        <p>{t.start.connect}</p>
+        <pre><code>{connect}</code></pre>
+      </div>
+      <div>
+        <h3>{t.start.next.title}</h3>
+        <ol class="next">
+          {t.start.next.items.map((item) => (
+            <li><a href={`${docs}${item.page}`}>{item.text}</a></li>
+          ))}
+        </ol>
+      </div>
+    </div>
   </section>
 </main>
